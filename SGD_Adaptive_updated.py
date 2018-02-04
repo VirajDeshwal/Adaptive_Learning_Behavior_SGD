@@ -17,11 +17,11 @@ from keras.layers import Input
 from keras.layers import Dense, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Dropout
-from keras.optimizers import SGD
+from keras.optimizers import SGD, RMSprop
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 from keras.callbacks import LearningRateScheduler
-
+from keras.callbacks import ModelCheckpoint
 
 
 batch_size = 32 
@@ -87,7 +87,7 @@ def build_model():
 
     model = Model(net_input, softmax_output)
     
-    model.compile(optimizer=SGD(lr=0.0, momentum= 9, nesterov=True, decay=0.0), loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=SGD(lr=0.01, momentum= 0, nesterov=True, decay=0.1), loss='categorical_crossentropy', metrics=['accuracy'])
     
     
     return (model)
@@ -106,15 +106,20 @@ callback_list= [lrate]
 model = build_model()
 
 print(model.summary())
+print("done")
 
-
-model.fit_generator(datagen_train.flow(x_train, y_train, batch_size=batch_size),
+model.fit(x_train, y_train, epochs=epochs, verbose=2, callbacks=callback_list,
+          validation_data=(x_valid,y_valid), validation_split=0, shuffle=True,steps_per_epoch=2000,
+          validation_steps= len(x_valid)//batch_size)
+'''
+checkpointer = ModelCheckpoint(filepath = 'model.weight.best.hdf5',verbose =1 , save_best_only=True)
+hist = model.fit_generator(datagen_train.flow(x_train, y_train, batch_size=batch_size),
                     steps_per_epoch=x_train.shape[0] // batch_size,
-                    epochs=epochs, verbose=2 ,callbacks = callback_list,
+                    epochs=epochs, verbose=2 ,callbacks = [checkpointer],
                     validation_data=datagen_valid.flow(x_valid, y_valid, batch_size=batch_size),
                     validation_steps=x_valid.shape[0] // batch_size)
 print('Done.')
-
+'''
 # evaluate and print test accuracy
 score = model.evaluate(x_test, y_test, verbose=0)
 print('\n', 'Test accuracy:', score[1])
