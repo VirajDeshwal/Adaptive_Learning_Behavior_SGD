@@ -87,7 +87,7 @@ def build_model():
 
     model = Model(net_input, softmax_output)
     
-    model.compile(optimizer=SGD(lr=0.01, momentum= 0, nesterov=True, decay=0.1), loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=SGD(lr=0.0, momentum= 0, nesterov=True, decay=0.0), loss='categorical_crossentropy', metrics=['accuracy'])
     
     
     return (model)
