@@ -1,1 +1,3 @@
 Adaptive Learning Behaviour Algorithm is implemented for SGD optimizer.
+Step Learning Function is successfully implemented in order to decay the learning rate with 10% for every 5 epochs.
+Function can be understand by the graph visualizaion.
